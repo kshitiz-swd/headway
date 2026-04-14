@@ -1,0 +1,36 @@
+
+@import "tailwindcss";
+
+
+.input {
+  @apply bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400;
+}
+
+
+.scene {
+  width: 200px;
+  height: 200px;
+  perspective: 800px;
+}
+
+.cube {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(-30deg) rotateY(30deg);
+}
+
+.face {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border: 2px solid black;
+}
+
+.front  { background: red;    transform: rotateY(0deg) translateZ(100px); }
+.back   { background: orange; transform: rotateY(180deg) translateZ(100px); }
+.right  { background: green;  transform: rotateY(90deg) translateZ(100px); }
+.left   { background: blue;   transform: rotateY(-90deg) translateZ(100px); }
+.top    { background: yellow; transform: rotateX(90deg) translateZ(100px); }
+.bottom { background: white;  transform: rotateX(-90deg) translateZ(100px); }
