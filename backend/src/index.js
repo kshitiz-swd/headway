@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000
 
 const app = express()
 app.use(express.json())
-app.use(cors({ origin: "headway-kshitijs-projects-5b929cca.vercel.app", credentials: true }))
+app.use(cors({ origin: true, credentials: true }))
 app.use(cookieParser())
 
 app.use('/api/test', (req, res) => {
