@@ -19,6 +19,10 @@ app.use(express.json())
 app.use(cors({ origin: "headway-kshitijs-projects-5b929cca.vercel.app", credentials: true }))
 app.use(cookieParser())
 
+app.use('/api/test', (req, res) => {
+    res.json({ message: "API is working!" })
+})
+
 app.use('/api/auth', authRoutes)
 app.use("/api/applications", applicationRoutes);
 app.use("/api/resumes", resumeRoutes);
