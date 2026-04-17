@@ -27,11 +27,10 @@ const Sidebar = ({ user, setUser }) => {
     const handleLogOut = async () => {
         try {
             await logout();
-        } catch (err) {
-            console.error(err);
-        } finally {
             setUser(null);
             navigate("/auth");
+        } catch (err) {
+            console.error(err);
         }
     };
 
