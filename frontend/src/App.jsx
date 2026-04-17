@@ -35,9 +35,15 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth" element={user ? <Navigate to="/" /> : <Auth setUser={setUser} />} />
 
-        <Route element={user ? <AppLayout user={user} setUser={setUser} /> : <Navigate to="/auth" />} >
+        <Route
+          path="/auth"
+          element={user ? <Navigate to="/" /> : <Auth setUser={setUser} />}
+        />
+
+        <Route
+          element={user ? <AppLayout user={user} setUser={setUser} /> : <Navigate to="/auth" />}
+        >
           <Route path="/" element={<Dashboard />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/pipeline" element={<Pipeline />} />
@@ -45,6 +51,7 @@ function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
+
       </Routes>
     </BrowserRouter>
   )

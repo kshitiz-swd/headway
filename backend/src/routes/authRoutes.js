@@ -66,8 +66,10 @@ router.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,       
-      sameSite: "None"    
+      sameSite: "None"   ,
+      path: "/", 
     });
+    
 
     res.status(200).json({ message: "Login successful" });
 
@@ -90,8 +92,14 @@ router.get("/me", auth, async (req, res) => {
 
 
 router.post("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.json({ message: "Logout successful" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    path: "/", 
+  });
+
+  res.status(200).json({ message: "Logout successful" });
 });
 
 
