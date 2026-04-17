@@ -1,21 +1,33 @@
 import { useState } from "react";
 import { createResume } from "../../api/services";
 
-const AddResumeModal = ({ onClose, refresh }) => {
+const AddResumeModal = ({ onClose }) => {
   const [form, setForm] = useState({
     title: "",
     fileUrl: "",
     description: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.title || !form.fileUrl) return;
+
     try {
+      setLoading(true);
       await createResume(form);
-      refresh();
       onClose();
     } catch (err) {
       console.error("Create failed", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -25,43 +37,47 @@ const AddResumeModal = ({ onClose, refresh }) => {
         <h2 className="text-xl font-semibold mb-4">Add Resume</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+
           <input
+            name="title"
+            value={form.title}
+            onChange={handleChange}
             placeholder="Title"
             className="border p-2 rounded"
-            onChange={(e) =>
-              setForm({ ...form, title: e.target.value })
-            }
           />
 
           <input
+            name="fileUrl"
+            value={form.fileUrl}
+            onChange={handleChange}
             placeholder="File URL"
             className="border p-2 rounded"
-            onChange={(e) =>
-              setForm({ ...form, fileUrl: e.target.value })
-            }
           />
 
           <textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
             placeholder="Description"
             className="border p-2 rounded"
-            onChange={(e) =>
-              setForm({ ...form, description: e.target.value })
-            }
           />
 
           <button
-            onClick={() => setOpenModal(true)}
-            className="bg-indigo-500 text-white text-center px-4 py-2 rounded-lg  border-2 border-black shadow-[4px_4px_0_0_#000] hover:opacity-90 transition"
+            type="submit"
+            disabled={loading}
+            className="bg-indigo-500 text-white text-center px-4 py-2 rounded-lg border-2 border-black shadow-[4px_4px_0_0_#000] hover:opacity-90 transition"
           >
-            Save
+            {loading ? "Saving..." : "Save"}
           </button>
 
           <button
+            type="button"
             onClick={onClose}
-            className=" text-black px-4 py-2 rounded-lg bg-white  border-2 border-black shadow-[4px_4px_0_0_#000] hover:opacity-90 transition"
+            className="text-black px-4 py-2 rounded-lg bg-white border-2 border-black shadow-[4px_4px_0_0_#000] hover:opacity-90 transition"
           >
             Cancel
           </button>
+
         </form>
       </div>
     </div>

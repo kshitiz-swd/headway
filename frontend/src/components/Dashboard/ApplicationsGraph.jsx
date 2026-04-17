@@ -67,9 +67,13 @@ const ApplicationsGraph = () => {
   };
 
   const currentRangeKey = rangeMap[selectedRange];
+
   const formattedData = formatTimelineData(data, currentRangeKey);
-  console.log(formattedData);
-  
+
+  if (!formattedData.length) {
+    return <p className="text-center py-10 text-gray-400">No data</p>;
+  }
+
 
   return (
     <div className="rounded-xl bg-white border-3 border-black flex flex-col gap-4 shadow-[8px_8px_0_0_#000]">
@@ -113,46 +117,52 @@ const ApplicationsGraph = () => {
       </div>
 
       <div className="p-4 pr-6">
-        <ResponsiveContainer width="100%" height={280}>
-          <AreaChart data={formattedData}>
-            <defs>
-              <linearGradient
-                id="applicationsGradient"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop offset="0%" stopColor="#6366F1" stopOpacity={0.4} />
-                <stop offset="100%" stopColor="#6366F1" stopOpacity={0} />
-              </linearGradient>
-            </defs>
+        {formattedData.length === 0 ? (
+          <div className="flex justify-center items-center h-[280px] text-gray-400">
+            No data
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={280}>
+            <AreaChart data={formattedData}>
+              <defs>
+                <linearGradient
+                  id="applicationsGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="0%" stopColor="#6366F1" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="#6366F1" stopOpacity={0} />
+                </linearGradient>
+              </defs>
 
-            <CartesianGrid stroke="#f1f5f9" strokeDasharray="3 3" />
-            <XAxis dataKey="label" tick={{ fontSize: 12 }} />
-            <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-            <Tooltip
-              contentStyle={{
-                borderRadius: "8px",
-                border: "1px solid #e5e7eb",
-              }}
-              formatter={(value) => [
-                `${value} applications`,
-                "Applications",
-              ]}
-            />
+              <CartesianGrid stroke="#f1f5f9" strokeDasharray="3 3" />
+              <XAxis dataKey="label" tick={{ fontSize: 12 }} />
+              <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
+              <Tooltip
+                contentStyle={{
+                  borderRadius: "8px",
+                  border: "1px solid #e5e7eb",
+                }}
+                formatter={(value) => [
+                  `${value} applications`,
+                  "Applications",
+                ]}
+              />
 
-            <Area
-              type="monotone"
-              dataKey="applications"
-              stroke="#6366F1"
-              strokeWidth={2}
-              fill="url(#applicationsGradient)"
-              dot={{ r: 2 }}
-              strokeLinecap="round"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+              <Area
+                type="monotone"
+                dataKey="applications"
+                stroke="#6366F1"
+                strokeWidth={2}
+                fill="url(#applicationsGradient)"
+                dot={{ r: 2 }}
+                strokeLinecap="round"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );

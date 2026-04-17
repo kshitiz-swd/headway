@@ -4,15 +4,12 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 
 const ResumePerformance = ({ data = [] }) => {
-  console.log(data);
-  
 
-  const formatted = data.map(item => ({
+  const formatted = data.slice(0, 5).map(item => ({
     resume: item.title || "Unknown",
     applications: item.applications,
     interviews: item.interviews,
@@ -26,32 +23,20 @@ const ResumePerformance = ({ data = [] }) => {
       </h3>
 
       {formatted.length === 0 ? (
-        <div className="h-[250px] flex items-center justify-center text-gray-400 text-sm">
-          No data available
+        <div className="h-[250px] flex items-center justify-center text-gray-400">
+          No data
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={formatted}>
-            <XAxis dataKey="resume" />
+            <XAxis dataKey="resume" angle={-20} textAnchor="end" height={60} />
             <YAxis allowDecimals={false} />
             <Tooltip />
-            <Legend />
-
-            <Bar
-              dataKey="applications"
-              fill="#6366F1"
-              radius={[4, 4, 0, 0]}
-            />
-
-            <Bar
-              dataKey="interviews"
-              fill="#A78BFA"
-              radius={[4, 4, 0, 0]}
-            />
+            <Bar dataKey="applications" fill="#6366F1" />
+            <Bar dataKey="interviews" fill="#A78BFA" />
           </BarChart>
         </ResponsiveContainer>
       )}
-
     </div>
   );
 };

@@ -1,25 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Infocards from '../components/Dashboard/Infocards'
 import ApplicationsGraph from '../components/Dashboard/ApplicationsGraph'
 import ApplicationStatus from '../components/Dashboard/ApplicationStatus'
 import { IoMdAdd } from 'react-icons/io'
-import { IoIosTrendingUp } from "react-icons/io";
-import { IoMdPeople, IoMdRibbon, IoMdCloseCircle } from "react-icons/io";
+import { IoIosTrendingUp } from "react-icons/io"
+import { IoMdPeople, IoMdRibbon, IoMdCloseCircle } from "react-icons/io"
 import { useOutletContext } from 'react-router-dom'
-
 import { getInsights, getStatusAnalytics } from '../api/services'
 import DashboardSkeleton from '../components/skeletons/DashboardSkeleton'
 
-
 const Dashboard = () => {
+  const { openAddApplicationModal, openAddResumeModal, applications } = useOutletContext()
 
-  const { openAddApplicationModal } = useOutletContext();
-
-  const [insights, setInsights] = useState(null);
-  const [statusData, setStatusData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [insights, setInsights] = useState({})
+  const [statusData, setStatusData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
+    if (!applications) return;
+
+    if (applications.length === 0) {
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       try {
         const [insightsRes, statusRes] = await Promise.all([
@@ -32,19 +37,27 @@ const Dashboard = () => {
 
       } catch (err) {
         console.error(err);
+        setError("Failed to load dashboard");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [applications]);
 
+  if (loading) return <DashboardSkeleton />
 
-  if (loading) return <DashboardSkeleton />;
+  if (error) {
+    return (
+      <div className="p-6 text-red-500">
+        {error}
+      </div>
+    )
+  }
 
   return (
-    <div className="p-6 space-y-8 h-screen rounded-xl  ">
+    <div className="p-6 space-y-8 h-screen rounded-xl">
 
       <div className="flex justify-between items-center">
         <div>
@@ -58,16 +71,16 @@ const Dashboard = () => {
 
           <button
             onClick={openAddApplicationModal}
-            className="bg-indigo-500 text-white px-4 py-2 rounded-lg  border-2 border-black shadow-[4px_4px_0_0_#000] flex items-center gap-2 hover:opacity-90 transition"
+            className="bg-indigo-500 text-white px-4 py-2 rounded-lg border-2 border-black shadow-[4px_4px_0_0_#000] flex items-center gap-2 hover:opacity-90 transition"
           >
             <IoMdAdd size={18} />
             Add Application
           </button>
+
           <button
-            // onClick={openAddModal}
-            className=" text-black px-4 py-2 rounded-lg bg-white  border-2 border-black shadow-[4px_4px_0_0_#000] flex items-center gap-2 hover:opacity-90 transition"
+            onClick={openAddResumeModal}
+            className="text-black px-4 py-2 rounded-lg bg-white border-2 border-black shadow-[4px_4px_0_0_#000] flex items-center gap-2 hover:opacity-90 transition"
           >
-            
             Upload Resume
           </button>
 
@@ -76,8 +89,8 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-4 gap-8">
         <Infocards
-          value={insights?.applications?.value}
-          change={insights?.applications?.change}
+          value={insights.applications?.value || 0}
+          change={insights.applications?.change || 0}
           title="Applications"
           icon={<IoIosTrendingUp size={18} />}
           iconBg="bg-blue-100"
@@ -85,8 +98,8 @@ const Dashboard = () => {
         />
 
         <Infocards
-          value={insights?.interviews?.value}
-          change={insights?.interviews?.change}
+          value={insights.interviews?.value || 0}
+          change={insights.interviews?.change || 0}
           title="Interviews"
           icon={<IoMdPeople size={18} />}
           iconBg="bg-purple-100"
@@ -94,8 +107,8 @@ const Dashboard = () => {
         />
 
         <Infocards
-          value={insights?.offers?.value}
-          change={insights?.offers?.change}
+          value={insights.offers?.value || 0}
+          change={insights.offers?.change || 0}
           title="Offers"
           icon={<IoMdRibbon size={18} />}
           iconBg="bg-green-100"
@@ -103,8 +116,8 @@ const Dashboard = () => {
         />
 
         <Infocards
-          value={insights?.rejections?.value}
-          change={insights?.rejections?.change}
+          value={insights.rejections?.value || 0}
+          change={insights.rejections?.change || 0}
           title="Rejections"
           icon={<IoMdCloseCircle size={18} />}
           iconBg="bg-red-100"
@@ -113,8 +126,7 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-4 gap-8">
-
-        <div className="col-span-2 bg-white ">
+        <div className="col-span-2 bg-white">
           <ApplicationsGraph />
         </div>
 
@@ -124,14 +136,50 @@ const Dashboard = () => {
       </div>
 
       <div className="bg-gradient-to-r from-indigo-500 to-indigo-800 text-white p-6 rounded-2xl shadow-md flex justify-between items-center">
-
         <div>
           <h3 className="text-lg font-semibold">AI Insights</h3>
-          <p className="text-sm opacity-90 mt-1">
-            {insights?.message || "No insights available yet."}
-          </p>
-        </div>
 
+          <div className="mt-2 space-y-2 text-sm opacity-90">
+
+            {insights.insights?.length > 0 ? (
+              insights.insights.map((item, i) => (
+                <p key={i}>• {item}</p>
+              ))
+            ) : (
+              <p>No insights available yet.</p>
+            )}
+
+            {insights.suggestions?.length > 0 && (
+              <div className="mt-3">
+                <p className="font-medium text-white/90">Suggestions:</p>
+                <ul className="list-disc ml-5 mt-1">
+                  {insights.suggestions.map((s, i) => (
+                    <li key={i}>{s}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+          </div>
+
+          <div className="mt-4 flex gap-6 text-xs opacity-80">
+
+            <span>
+              Interview Rate: {insights.interviewRate}%
+            </span>
+
+            <span>
+              Offer Rate: {insights.offerRate}%
+            </span>
+
+            {insights.bestPlatform && (
+              <span>
+                Best Platform: {insights.bestPlatform}
+              </span>
+            )}
+
+          </div>
+        </div>
       </div>
 
     </div>

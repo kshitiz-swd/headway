@@ -103,6 +103,30 @@ const getInsights = async (req, res) => {
             { $limit: 1 }
         ]);
 
+        const insights = [];
+        const suggestions = [];
+
+        if (interviewRate > 30) {
+            insights.push("You have a strong interview conversion rate.");
+        } else if (interviewRate < 10 && totalApplications > 5) {
+            insights.push("Your interview conversion rate is low.");
+            suggestions.push("Improve your resume or tailor applications.");
+        }
+
+        if (offerRate > 10) {
+            insights.push("You are performing well in securing offers.");
+        }
+
+        if (bestPlatform.length > 0) {
+            insights.push(`Most applications are coming from ${bestPlatform[0]._id}.`);
+            suggestions.push(`Focus more on ${bestPlatform[0]._id} for better results.`);
+        }
+
+        if (thisMonthApps === 0) {
+            insights.push("No applications this month.");
+            suggestions.push("Start applying consistently to increase opportunities.");
+        }
+
         res.status(200).json({
             applications: {
                 value: thisMonthApps,
@@ -122,7 +146,11 @@ const getInsights = async (req, res) => {
             },
             interviewRate,
             offerRate,
-            bestPlatform: bestPlatform[0]?._id || null
+            bestPlatform: bestPlatform[0]?._id || null,
+
+
+            insights,
+            suggestions
         });
 
     } catch (error) {
