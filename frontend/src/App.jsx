@@ -9,6 +9,7 @@ import Auth from "./pages/Auth"
 import { useEffect, useState } from "react"
 import { getUser } from './api/services'
 import Settings from "./pages/7.Settings"
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 function App() {
 
@@ -48,27 +49,30 @@ function App() {
   if (loading) return <DotLoader />;
 
   return (
-    <BrowserRouter>
-      <Routes>
+    <>
+      <BrowserRouter>
+        <Routes>
 
-        <Route
-          path="/auth"
-          element={user ? <Navigate to="/" /> : <Auth setUser={setUser} />}
-        />
+          <Route
+            path="/auth"
+            element={user ? <Navigate to="/" /> : <Auth setUser={setUser} />}
+          />
 
-        <Route
-          element={user ? <AppLayout user={user} setUser={setUser} /> : <Navigate to="/auth" />}
-        >
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/applications" element={<Applications />} />
-          <Route path="/pipeline" element={<Pipeline />} />
-          <Route path="/resumes" element={<Resumes />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/settings" element={<Settings />} />
-        </Route>
+          <Route
+            element={user ? <AppLayout user={user} setUser={setUser} /> : <Navigate to="/auth" />}
+          >
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/applications" element={<Applications />} />
+            <Route path="/pipeline" element={<Pipeline />} />
+            <Route path="/resumes" element={<Resumes />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
 
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+      <SpeedInsights />
+    </>
   )
 }
 
