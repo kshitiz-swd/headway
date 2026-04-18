@@ -30,23 +30,22 @@ function App() {
     checkUser()
   }, [])
 
-  if (true) {
+  const DotLoader = () => {
     return (
-      <div className="h-screen flex flex-col items-center justify-center gap-6 p-6 text-center">
+      <div className="flex items-center justify-center gap-2 h-screen">
 
-        <img
-          src="/src/assets/theDance.webp"
-          alt="art"
-          className="w-64 h-auto rounded-xl shadow-md animate-pulse"
-        />
+        <div className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
 
-        <p className="text-gray-600 text-sm">
-          Enjoy this artwork while the server wakes up 🎨
-        </p>
+        <div className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+
+        <div className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce"></div>
 
       </div>
     );
-  }
+  };
+
+
+  if (loading) return <DotLoader />;
 
   return (
     <BrowserRouter>
