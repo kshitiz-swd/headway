@@ -48,6 +48,7 @@ function App() {
   if (loading) return <DotLoader />;
 
   return (
+
     <BrowserRouter>
       <Routes>
 
@@ -69,6 +70,7 @@ function App() {
 
       </Routes>
     </BrowserRouter>
+
   )
 }
 
