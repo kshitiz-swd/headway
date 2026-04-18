@@ -9,6 +9,7 @@ import Auth from "./pages/Auth"
 import { useEffect, useState } from "react"
 import { getUser } from './api/services'
 import Settings from "./pages/7.Settings"
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 function App() {
 
@@ -68,6 +69,7 @@ function App() {
         </Route>
 
       </Routes>
+      <SpeedInsights />
     </BrowserRouter>
   )
 }
