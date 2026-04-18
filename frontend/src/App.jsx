@@ -30,7 +30,23 @@ function App() {
     checkUser()
   }, [])
 
-  if (loading) return <p>Loading...</p>;
+  if (true) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center gap-6 p-6 text-center">
+
+        <img
+          src="/src/assets/theDance.webp"
+          alt="art"
+          className="w-64 h-auto rounded-xl shadow-md animate-pulse"
+        />
+
+        <p className="text-gray-600 text-sm">
+          Enjoy this artwork while the server wakes up 🎨
+        </p>
+
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
