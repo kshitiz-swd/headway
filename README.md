@@ -6,8 +6,8 @@ A full-stack job tracking application to manage applications, track progress, an
 
 ## 🌐 Live Demo
 
-- Frontend: https://your-vercel-url  
-- Backend: https://your-render-url  
+- Frontend: https://headway-swart.vercel.app/ 
+- Backend: https://headway-jufc.onrender.com
 
 ---
 
